@@ -1,4 +1,4 @@
-Pour créer un document d'architecture informatique détaillé pour le projet "Conception d'une IA spécifique aux données de l'entreprise WXYZ," basé sur le backlog fourni, nous allons suivre une structure organisée en sections. Chacune de ces sections inclura des diagrammes explicatifs et une description textuelle pour clarifier l'architecture du système.
+Voici le document d'architecture informatique détaillé pour le projet "Conception d'une IA spécifique aux données de l'entreprise WXYZ" avec les diagrammes générés en utilisant la syntaxe Mermaid.
 
 ### 1. Introduction
 
@@ -19,49 +19,44 @@ L'architecture logique décrit les composants logiciels principaux, leur organis
 
 **Diagramme de Composants :**
 
-```plantuml
-@startuml
-component "Tableau de Bord" as TD
-component "Moteur IA" as MIA
-component "Module de Collecte de Données" as CD
-component "Rapport" as RP
-component "Base de Données" as BD
-
-TD --> MIA : API REST
-MIA --> CD : Envoie de Requêtes
-MIA --> BD : Accès aux données normalisées
-RP --> MIA : Génération de Rapports
-@enduml
+```mermaid
+graph TD
+    TD[Tableau de Bord] -->|API REST| MIA[Moteur IA]
+    MIA -->|Envoie de Requêtes| CD[Module de Collecte de Données]
+    MIA -->|Accès aux données normalisées| BD[Base de Données]
+    RP[Rapport] -->|Génération de Rapports| MIA
 ```
 
 **Diagramme de Classes :**
 
-```plantuml
-@startuml
-class Utilisateur {
-  +id : int
-  +nom : String
-  +email : String
-  +seConnecter() : void
-  +consulterRapports() : void
-}
+```mermaid
+classDiagram
+    class Utilisateur {
+      +int id
+      +String nom
+      +String email
+      +void seConnecter()
+      +void consulterRapports()
+    }
+    
+    class MoteurIA {
+      +void collecterDonnees()
+      +void normaliserDonnees()
+      +void analyserDonnees()
+    }
+    
+    class Rapport {
+      +String titre
+      +Date date
+      +void exporterPDF()
+    }
 
-class MoteurIA {
-  +collecterDonnees() : void
-  +normaliserDonnees() : void
-  +analyserDonnees() : void
-}
+    class Admin
+    class Analyseur
 
-class Rapport {
-  +titre : String
-  +date : Date
-  +exporterPDF() : void
-}
-
-Utilisateur <|-- Admin
-Utilisateur <|-- Analyseur
-MoteurIA --> Rapport : génère
-@enduml
+    Utilisateur <|-- Admin
+    Utilisateur <|-- Analyseur
+    MoteurIA --> Rapport : génère
 ```
 
 ---
@@ -78,62 +73,36 @@ L'architecture technique précise l'infrastructure matérielle et logicielle du 
 
 **Diagramme d'Infrastructure :**
 
-```plantuml
-@startuml
-node "Serveur Front-End" as FE {
-  [Application Front-End]
-}
-
-node "Serveur Back-End" as BE {
-  [Application Back-End]
-  [Moteur IA]
-}
-
-node "Base de Données" as DB {
-  [Base de Données SQL]
-}
-
-FE --> BE : Connexion HTTPS
-BE --> DB : Connexion JDBC
-@enduml
+```mermaid
+graph TD
+    FE[Serveur Front-End] -->|Connexion HTTPS| BE[Serveur Back-End]
+    BE -->|Connexion JDBC| DB[Base de Données]
 ```
 
 **Diagramme de Déploiement :**
 
-```plantuml
-@startuml
-node "Cloud AWS" {
-  [Serveur Web] --> [Application Front-End]
-  [Serveur Applicatif] --> [Application Back-End]
-}
-
-node "Réseau Interne" {
-  [Base de Données] --> [Moteur IA]
-}
-
-[Serveur Applicatif] --> [Base de Données]
-@enduml
+```mermaid
+graph TD
+    subgraph Cloud AWS
+        SW[Serveur Web] -->|Déploiement| AFE[Application Front-End]
+        SA[Serveur Applicatif] -->|Déploiement| ABE[Application Back-End]
+    end
+    
+    subgraph Réseau Interne
+        BD[Base de Données] -->|Connexion avec| MIA[Moteur IA]
+    end
+    
+    SA --> BD
 ```
 
 **Diagramme de Flux de Données :**
 
-```plantuml
-@startuml
-actor "Utilisateur" as User
-rectangle "Moteur IA" {
-  [Collecte de Données]
-  [Analyse des Données]
-}
-
-rectangle "Base de Données" {
-  [Données Brutes]
-  [Données Analytiques]
-}
-
-User --> [Collecte de Données] : Soumet les Requêtes
-[Collecte de Données] --> [Données Brutes] : Enregistrement
-[Analyse des Données] --> [Données Analytiques] : Sauvegarde
-@enduml
+```mermaid
+graph LR
+    User[Utilisateur] -->|Soumet les Requêtes| CD[Collecte de Données]
+    CD -->|Enregistrement| BR[Données Brutes]
+    AD[Analyse des Données] -->|Sauvegarde| DA[Données Analytiques]
+    CD --> AD
 ```
 
 ---
@@ -146,44 +115,39 @@ L'architecture applicative décrit la structure des applications, modules, et se
 
 **Diagramme de Séquence :**
 
-```plantuml
-@startuml
-actor Utilisateur
-participant "Interface Utilisateur"
-participant "Moteur IA"
-participant "Base de Données"
-
-Utilisateur -> "Interface Utilisateur" : Se Connecter
-"Interface Utilisateur" -> "Moteur IA" : Envoie Requête
-"Moteur IA" -> "Base de Données" : Requêtes d'Analyse
-"Base de Données" -> "Moteur IA" : Résultats d'Analyse
-"Moteur IA" -> "Interface Utilisateur" : Retourne Résultats
-@enduml
+```mermaid
+sequenceDiagram
+    participant Utilisateur
+    participant InterfaceUtilisateur
+    participant MoteurIA
+    participant BaseDeDonnées
+    
+    Utilisateur ->> InterfaceUtilisateur: Se Connecter
+    InterfaceUtilisateur ->> MoteurIA: Envoie Requête
+    MoteurIA ->> BaseDeDonnées: Requêtes d'Analyse
+    BaseDeDonnées ->> MoteurIA: Résultats d'Analyse
+    MoteurIA ->> InterfaceUtilisateur: Retourne Résultats
 ```
 
 **Diagramme d'Activités :**
 
-```plantuml
-@startuml
-start
-:Demande de l'utilisateur;
-:Collecte des Données;
-:Analyse des Données;
-:Affichage des Résultats;
-stop
-@enduml
+```mermaid
+graph TD
+    start(Début) --> |Demande de l'utilisateur| collecte[Collecte des Données]
+    collecte --> analyse[Analyse des Données]
+    analyse --> affichage[Affichage des Résultats]
+    affichage --> stop(Fin)
 ```
 
 **Diagramme d'État :**
 
-```plantuml
-@startuml
-[*] --> Connexion
-Connexion --> Collecte : Connecté
-Collecte --> Analyse : Données Disponibles
-Analyse --> Rapport : Analyse Complète
-Rapport --> [*] : Rapport Généré
-@enduml
+```mermaid
+stateDiagram
+    [*] --> Connexion
+    Connexion --> Collecte : Connecté
+    Collecte --> Analyse : Données Disponibles
+    Analyse --> Rapport : Analyse Complète
+    Rapport --> [*] : Rapport Généré
 ```
 
 ---
@@ -200,22 +164,11 @@ L'architecture de sécurité décrit les mécanismes pour assurer la confidentia
 
 **Diagramme de Sécurité :**
 
-```plantuml
-@startuml
-actor Utilisateur
-node "Serveur Web" {
-  [Authentification OAuth 2.0]
-  [Chiffrement HTTPS]
-}
-
-node "Serveur Applicatif" {
-  [Contrôle d'Accès]
-}
-
-Utilisateur --> [Authentification OAuth 2.0] : Se Connecte
-[Authentification OAuth 2.0] --> [Contrôle d'Accès] : Token JWT
-[Contrôle d'Accès] --> [Chiffrement HTTPS] : Accès Sécurisé
-@enduml
+```mermaid
+graph TD
+    User[Utilisateur] -->|Se Connecte| OAuth[Authentification OAuth 2.0]
+    OAuth -->|Token JWT| Access[Contrôle d'Accès]
+    Access -->|Accès Sécurisé| HTTPS[Chiffrement HTTPS]
 ```
 
 ---
@@ -228,17 +181,11 @@ Cette section décrit les interfaces entre les différents composants et systèm
 
 **Diagramme d'Intégration :**
 
-```plantuml
-@startuml
-component "Moteur IA" as MIA
-component "API de Services Externes" as API
-component "Base de Données" as DB
-component "Module de Collecte de Données" as CD
-
-MIA --> API : Requêtes REST
-MIA --> DB : Connexion JDBC
-CD --> API : Collecte des Données
-@enduml
+```mermaid
+graph TD
+    MIA[Moteur IA] -->|Requêtes REST| API[API de Services Externes]
+    MIA -->|Connexion JDBC| DB[Base de Données]
+    CD[Module de Collecte de Données] -->|Collecte des Données| API
 ```
 
 ---
@@ -249,32 +196,27 @@ CD --> API : Collecte des Données
 
 Le schéma global combine tous les éléments précédents pour offrir une vue d'ensemble du système.
 
-```plantuml
-@startuml
-actor Utilisateur
-node "Cloud AWS" {
-  [Serveur Web] --> [Application Front-End]
-  [Serveur Applicatif] --> [Application Back-End]
-}
-
-node "Réseau Interne" {
-  [Base de Données] --> [Moteur IA]
-}
-
-cloud "API Externes" {
-  [Services Externes]
-}
-
-Utilisateur --> [Serveur Web]
-[Serveur Applicatif] --> [Base de Données]
-[Serveur Applicatif] --> [Services Externes]
-@enduml
+```mermaid
+graph TD
+    Utilisateur -->|Connexion| SW[Serveur Web]
+    
+    subgraph Cloud AWS
+        SW --> AFE[Application Front-End]
+        SA[Serveur Applicatif] --> ABE[Application Back-End]
+    end
+    
+    subgraph Réseau Interne
+        BD[Base de Données] --> MIA[Moteur IA]
+    end
+    
+    SA --> BD
+    SA --> API[Services Externes]
 ```
 
 ---
 
 ### Conclusion
 
-Ce document d'architecture fournit une vue d'ensemble complète du projet de conception d'une IA pour l'entreprise WXYZ. Il est structuré de manière à couvrir tous les aspects critiques, de l'organisation des composants logiciels à l'infrastructure technique et à la sécurité. Les diagrammes PlantUML inclus permettent de visualiser clairement les relations et interactions entre les différents éléments du système. 
+Ce document d'architecture fournit une vue d'ensemble complète du projet de conception d'une IA pour l'entreprise WXYZ. Il est structuré de manière à couvrir tous les aspects critiques, de l'organisation des composants logiciels à l'infrastructure technique et à la sécurité. Les diagrammes Mermaid inclus permettent de visualiser clairement les relations et interactions entre les différents éléments du système.
 
 Chaque section est conçue pour faciliter la compréhension et la mise en œuvre du projet tout en assurant l'alignement avec les besoins métier et les meilleures pratiques en matière de développement logiciel.
